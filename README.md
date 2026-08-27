@@ -1,75 +1,113 @@
-# Cybertron
+# C.Y.B.E.R.
 
-**C.Y.B.E.R. — The Engineering Copilot for the Physical World.**
+**An AI assistant for people who build, test, and repair hardware.**
 
-C.Y.B.E.R. is being built as a lightweight desktop AI for engineers, technicians, robotics builders, electronics work, and eventually industrial field support. The product combines voice, live computer telemetry, hardware discovery, asset identity, screen awareness, technical knowledge, diagnostic memory, and later hardware vision.
+C.Y.B.E.R. is designed to understand both **your computer** and the **hardware connected to it**. The goal is simple: instead of digging through menus, device lists, logs, manuals, and error messages, you can ask C.Y.B.E.R. what is happening and work through the problem with it.
 
-## Product direction
+> Plug something in. Ask what it is. Ask what your computer sees. Start troubleshooting.
 
-The long-term company direction is an **industrial field-intelligence platform**: C.Y.B.E.R. should understand both the computer and the physical equipment a technician is working on, connect that context to approved documentation and service history, and maintain a structured diagnostic investigation.
+## What C.Y.B.E.R. can do right now
 
-Core pillars:
+- **Talk with you** using voice.
+- **Detect connected hardware** such as USB and serial devices.
+- **Recognize common engineering hardware** such as ESP32 boards, Arduino boards, USB-to-serial adapters, debuggers, storage, input devices, and more.
+- **Keep unknown devices visible** instead of pretending it knows what they are.
+- **Combine related connections into one device.** For example, an ESP32 that appears once as USB and once as a serial port can be treated as one physical asset.
+- **Read live Mac information** such as CPU, memory, disk, battery, network, uptime, and thermal state.
+- **Remember hardware it has seen before.**
+- **Create diagnostic sessions** so troubleshooting steps and observations are not forgotten.
+- **Use screen awareness** when requested.
 
-- **Voice** — fast, interruptible hands-free conversation.
-- **Hardware discovery** — USB, serial, HID, storage, camera, audio, Bluetooth, displays, Thunderbolt, and unknown devices.
-- **Asset intelligence** — collapse raw OS endpoints into persistent physical engineering assets.
-- **Live telemetry** — current CPU, memory, disk, battery, network, uptime, and thermal state.
-- **Engineering knowledge** — device profiles, capabilities, datasheet/manual targets, and future organization documentation.
-- **Diagnostics** — persistent sessions that remember the asset, symptom, observations, evidence, telemetry, and resolution.
-- **Vision** — screen understanding now; physical hardware/component recognition next.
+C.Y.B.E.R. is still an **alpha project**, so we are currently focused on making hardware detection, system awareness, and startup reliability extremely solid.
 
-## Current release: V13 Asset Intelligence Core
+## Example
 
-V13 adds an asset layer above V12.2 hardware discovery. A board that appears as both USB and serial can now resolve into one physical asset with multiple interfaces. Each asset can carry an identity-confidence score, evidence trail, manufacturer/family information, capabilities, documentation targets, and persistent local history.
+You connect an ESP32.
 
-Unknown hardware is still retained instead of being ignored or forced into a guessed model.
+**C.Y.B.E.R.:** “ESP32-S3 detected.”
 
-Useful commands:
+**You:** “What connection is it using?”
+
+**C.Y.B.E.R.:** “USB is connected and a serial interface is available.”
+
+**You:** “Start a diagnostic session. It won’t upload.”
+
+C.Y.B.E.R. can now keep the device identity, current system information, and your troubleshooting notes together while you work on the problem.
+
+That is the direction of the product: **an AI that understands the real hardware you are working on, not just the question you typed.**
+
+## Current version
+
+### V13.0.2 — Runtime Integrity Repair
+
+This update fixes the V13 installation problems that could cause startup errors such as missing `telemetry` files or mismatched hardware scanner files.
+
+V13.0.2 now installs the complete matching runtime together and checks it before launching C.Y.B.E.R.
+
+See [`releases/v13.0.2/README.md`](releases/v13.0.2/README.md) for the release notes.
+
+## Useful commands
 
 - `Show assets`
 - `Show current asset`
 - `What did I just plug in?`
 - `What can I do with this device?`
+- `Show raw hardware`
+- `System information`
+- `CPU usage`
+- `RAM usage`
 - `Start diagnostic session`
 - `Diagnostic status`
 - `Note that ...`
 - `End diagnostic session`
-- `Show raw hardware`
 
-See [`docs/updates/cybertron_asset_intelligence_v13/README.md`](docs/updates/cybertron_asset_intelligence_v13/README.md).
+## Where this is going
 
-## Current platform target
+The bigger goal is to turn C.Y.B.E.R. into an **AI field and engineering assistant**.
 
-Primary development target:
+A technician or engineer should eventually be able to point C.Y.B.E.R. at a machine or board and have it combine:
 
-- Intel MacBook Pro (Late 2013)
-- macOS Big Sur 11.7.11
-- Python + PySide2
-- OpenCV + NumPy
-- Cloud AI for expensive inference
-- performance-first background hardware/system monitoring
+- the hardware it can detect,
+- what the camera sees,
+- what is happening on the computer,
+- live device data,
+- manuals and datasheets,
+- previous repair history,
+- and the current troubleshooting session.
 
-Windows support is planned through a separate OS-integration layer while keeping the shared AI, asset, diagnostic, UI, research, and hardware logic portable.
+Then the user can simply ask things like:
 
-## Distribution plan
+> “What am I working on?”
+>
+> “Why is this failing?”
+>
+> “Show me the correct manual.”
+>
+> “What happened the last time this device failed?”
 
-Users should not need Terminal or their own Python installation.
+For professional and industrial use, technical guidance should come from verified documentation and approved procedures rather than guessed instructions.
 
-- **macOS:** `Cybertron.app` distributed in `Cybertron-macOS-x86_64.dmg`
-- **Windows:** packaged `Cybertron.exe` application and installer
+## Roadmap
 
-See [`docs/PACKAGING.md`](docs/PACKAGING.md).
+1. **Perfect hardware detection** — reliably recognize what is connected.
+2. **Documentation intelligence** — connect devices to the right manuals, pinouts, and datasheets.
+3. **Serial and telemetry intelligence** — understand logs and live engineering data.
+4. **Hardware vision** — recognize boards, components, connectors, tools, and indicators with a camera.
+5. **Project and repair memory** — remember what was built, tested, changed, and fixed.
+6. **Field support** — guide technicians using the correct documentation and live context.
+7. **Fleet intelligence** — help companies understand repeated failures across many machines.
 
-## Near-term roadmap
+## Platform
 
-1. Perfect asset identity and hardware discovery reliability.
-2. Add verified documentation retrieval and device-specific technical profiles.
-3. Add serial/log/telemetry intelligence for engineering hardware.
-4. Add hardware vision for boards, tools, components, connectors, and indicators.
-5. Add richer diagnostic-session evidence and project/service history.
-6. Add industrial connectors and organization-approved maintenance knowledge.
-7. Add fleet-level failure and repair analytics.
+Development is currently focused on **macOS**, with Windows support planned.
 
-## Status
+The release target is a normal desktop application so users do not need to launch C.Y.B.E.R. from Terminal or manage Python themselves.
 
-C.Y.B.E.R. is an **alpha project**. Identity confidence is evidence-based, and safety-critical/industrial guidance should rely on approved documentation rather than invented repair procedures.
+- macOS: `Cybertron.app` / `.dmg`
+- Windows: `.exe` / installer
+
+## For developers
+
+C.Y.B.E.R. currently uses Python, PySide2, OpenCV, and NumPy, with heavier AI work designed to run in the cloud so the desktop app can stay lightweight.
+
+Development history is documented in [`CHANGELOG.md`](CHANGELOG.md) and [`docs/updates/`](docs/updates/).
