@@ -36,8 +36,17 @@ This is the preserved development sequence from the Cybertron update packages. O
 32. V12.2 Real-Time Hardware + System Engine
 33. V13 Asset Intelligence Core
 34. V13.0.1 Scanner/Monitor Compatibility Hotfix
+35. V13.0.2 Runtime Integrity Repair
 
 Detailed notes: [`docs/updates/`](docs/updates/).
+
+## V13.0.2 — Runtime Integrity Repair
+
+- Fixed startup failure caused by the V13 UI importing `telemetry.system_monitor` while a partial V13 installation did not contain the `telemetry/` package.
+- Changed the repair strategy from isolated-file patches to deployment of the complete matched V13 runtime.
+- Added full-runtime syntax compilation and internal-import closure validation before the live tree is launched.
+- Added real import preflight through `telemetry`, hardware, asset intelligence, diagnostics, screen awareness, voice, and `ui.main_window`.
+- Added telemetry and hardware preflights so packaging/version failures are reported by the installer instead of appearing later during normal startup.
 
 ## V13.0.1 — Scanner/Monitor Compatibility Hotfix
 
