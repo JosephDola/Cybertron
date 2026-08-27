@@ -2,6 +2,8 @@
 
 **An AI assistant for people who build, test, and repair hardware.**
 
+> **New here?** Read the 60-second explanation: [`docs/START_HERE.md`](docs/START_HERE.md)
+
 C.Y.B.E.R. is designed to understand both **your computer** and the **hardware connected to it**. The goal is simple: instead of digging through menus, device lists, logs, manuals, and error messages, you can ask C.Y.B.E.R. what is happening and work through the problem with it.
 
 > Plug something in. Ask what it is. Ask what your computer sees. Start troubleshooting.
