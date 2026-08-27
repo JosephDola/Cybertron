@@ -31,5 +31,39 @@ This is the preserved development sequence from the Cybertron update packages. O
 27. Gaze Voice V9
 28. Gaze Single-Window V10
 29. Gaze Model Fix V11
+30. V12 Hardware Discovery
+31. V12.1 Voice Restore
+32. V12.2 Real-Time Hardware + System Engine
+33. V13 Asset Intelligence Core
 
-Detailed notes: [`docs/updates/README.md`](docs/updates/README.md).
+Detailed notes: [`docs/updates/`](docs/updates/).
+
+## V13.0 — Asset Intelligence Core
+
+- Added a persistent engineering asset model above raw hardware endpoints.
+- Added endpoint-to-asset resolution so USB + serial interfaces can represent one physical board.
+- Added identity confidence, identity evidence, manufacturer/family metadata, capabilities, and documentation targets.
+- Added local asset registry under `~/.config/cybertron/asset_registry.json`.
+- Added persistent diagnostic sessions under `~/.config/cybertron/diagnostic_sessions.json`.
+- Added device profiles for major microcontroller families, USB-UART bridges, debuggers, CAN interfaces, test instruments, and common industrial controller/drive names.
+- Added asset connect/disconnect events and asset-aware voice announcements.
+- Changed `What did I just plug in?` to prefer the resolved asset instead of a raw endpoint.
+- Added `Show raw hardware` for low-level endpoint diagnostics.
+- Added asset and diagnostic context to cloud reasoning.
+- Batched asset-registry writes so the new identity layer does not add expensive disk I/O to the fast hardware scan loop.
+
+## V12.2 — Real-Time Hardware + System Engine
+
+- Rebuilt hardware monitoring into fast/medium/slow cached discovery tiers.
+- Added modern IOKit USB scanning plus fallback paths.
+- Added HID, serial, external storage, Bluetooth, audio, camera, Thunderbolt, display, and FireWire discovery.
+- Added real-time CPU, memory, disk, battery, uptime, network, and thermal-state telemetry.
+- Added live system context to cloud reasoning.
+
+## V12.1 — Voice Restore
+
+- Restored the macOS speech fallback and fixed speech-state recovery.
+
+## V12 — Hardware Discovery
+
+- Added live USB/serial hardware discovery, common engineering-device identification, and hardware connect/disconnect events.
