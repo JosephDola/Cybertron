@@ -1,59 +1,75 @@
 # Cybertron
 
-**C.Y.B.E.R. — an AI engineering companion for software, electronics, robotics, and physical hardware.**
+**C.Y.B.E.R. — The Engineering Copilot for the Physical World.**
 
-Cybertron is being built as a lightweight desktop AI that can talk naturally, understand the screen when permitted, organize research in a spatial workspace, and eventually help design, debug, and learn from real hardware projects such as Arduino, ESP32, Raspberry Pi, robotics, mechatronics, circuits, sensors, and embedded systems.
+C.Y.B.E.R. is being built as a lightweight desktop AI for engineers, technicians, robotics builders, electronics work, and eventually industrial field support. The product combines voice, live computer telemetry, hardware discovery, asset identity, screen awareness, technical knowledge, diagnostic memory, and later hardware vision.
 
-## Long-term goal
+## Product direction
 
-**The Engineering Copilot for the Physical World.**
+The long-term company direction is an **industrial field-intelligence platform**: C.Y.B.E.R. should understand both the computer and the physical equipment a technician is working on, connect that context to approved documentation and service history, and maintain a structured diagnostic investigation.
 
 Core pillars:
 
-- **Voice** — fast, interruptible, low-latency conversation.
-- **Vision** — screen awareness now; hardware/circuit recognition later.
-- **Spatial workspace** — research, code, schematics, CAD references, and debugging information around the C.Y.B.E.R. core.
-- **Engineering memory** — project-specific parts, wiring, code, tests, and decisions.
-- **Debugging** — help diagnose software and hardware problems.
+- **Voice** — fast, interruptible hands-free conversation.
+- **Hardware discovery** — USB, serial, HID, storage, camera, audio, Bluetooth, displays, Thunderbolt, and unknown devices.
+- **Asset intelligence** — collapse raw OS endpoints into persistent physical engineering assets.
+- **Live telemetry** — current CPU, memory, disk, battery, network, uptime, and thermal state.
+- **Engineering knowledge** — device profiles, capabilities, datasheet/manual targets, and future organization documentation.
+- **Diagnostics** — persistent sessions that remember the asset, symptom, observations, evidence, telemetry, and resolution.
+- **Vision** — screen understanding now; physical hardware/component recognition next.
 
-## Current target
+## Current release: V13 Asset Intelligence Core
 
-Primary development machine:
+V13 adds an asset layer above V12.2 hardware discovery. A board that appears as both USB and serial can now resolve into one physical asset with multiple interfaces. Each asset can carry an identity-confidence score, evidence trail, manufacturer/family information, capabilities, documentation targets, and persistent local history.
+
+Unknown hardware is still retained instead of being ignored or forced into a guessed model.
+
+Useful commands:
+
+- `Show assets`
+- `Show current asset`
+- `What did I just plug in?`
+- `What can I do with this device?`
+- `Start diagnostic session`
+- `Diagnostic status`
+- `Note that ...`
+- `End diagnostic session`
+- `Show raw hardware`
+
+See [`docs/updates/cybertron_asset_intelligence_v13/README.md`](docs/updates/cybertron_asset_intelligence_v13/README.md).
+
+## Current platform target
+
+Primary development target:
 
 - Intel MacBook Pro (Late 2013)
 - macOS Big Sur 11.7.11
-- Python desktop application
-- PySide2
-- OpenCV
-- NumPy
+- Python + PySide2
+- OpenCV + NumPy
 - Cloud AI for expensive inference
+- performance-first background hardware/system monitoring
 
-Windows support is planned. Platform-specific actions should live behind a small OS integration layer so the AI, UI, voice, research, and future hardware modules stay shared.
+Windows support is planned through a separate OS-integration layer while keeping the shared AI, asset, diagnostic, UI, research, and hardware logic portable.
 
 ## Distribution plan
 
-Cybertron can stay Python internally without making the user run Python or Terminal. The release build should be frozen into a standalone desktop application.
+Users should not need Terminal or their own Python installation.
 
-- **macOS:** `Cybertron.app` inside `Cybertron-macOS-x86_64.dmg`
-- **Windows:** packaged `Cybertron.exe` application, then a normal Windows installer
+- **macOS:** `Cybertron.app` distributed in `Cybertron-macOS-x86_64.dmg`
+- **Windows:** packaged `Cybertron.exe` application and installer
 
-See [Packaging](docs/PACKAGING.md).
+See [`docs/PACKAGING.md`](docs/PACKAGING.md).
 
-## Development history
+## Near-term roadmap
 
-The repo now contains a documented history of the Cybertron update sequence through **V11**. Every preserved update has its own README under [`docs/updates/`](docs/updates/README.md).
-
-See also [CHANGELOG.md](CHANGELOG.md).
-
-## Current priorities
-
-1. Stable ChatGPT-Voice-style conversation with interruption.
-2. Lightweight screen awareness.
-3. Reliable desktop integration.
-4. Hardware engineering mode: parts, pinouts, wiring, serial logs, datasheets, and debugging.
-5. Windows platform layer.
-6. Research graph and engineering memory.
+1. Perfect asset identity and hardware discovery reliability.
+2. Add verified documentation retrieval and device-specific technical profiles.
+3. Add serial/log/telemetry intelligence for engineering hardware.
+4. Add hardware vision for boards, tools, components, connectors, and indicators.
+5. Add richer diagnostic-session evidence and project/service history.
+6. Add industrial connectors and organization-approved maintenance knowledge.
+7. Add fleet-level failure and repair analytics.
 
 ## Status
 
-Cybertron is an **alpha project**. Historical builds are preserved for reference while the architecture is being consolidated for desktop packaging and the hardware-engineering roadmap.
+C.Y.B.E.R. is an **alpha project**. Identity confidence is evidence-based, and safety-critical/industrial guidance should rely on approved documentation rather than invented repair procedures.
