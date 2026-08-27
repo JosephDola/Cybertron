@@ -35,8 +35,16 @@ This is the preserved development sequence from the Cybertron update packages. O
 31. V12.1 Voice Restore
 32. V12.2 Real-Time Hardware + System Engine
 33. V13 Asset Intelligence Core
+34. V13.0.1 Scanner/Monitor Compatibility Hotfix
 
 Detailed notes: [`docs/updates/`](docs/updates/).
+
+## V13.0.1 — Scanner/Monitor Compatibility Hotfix
+
+- Fixed the V13 startup crash caused by a new hardware monitor being installed over an older scanner API.
+- V13.0.1 explicitly ships the matching tiered `hardware/scanner.py`.
+- Hardened `hardware/monitor.py` so optional scanner APIs are feature-detected instead of assumed during import.
+- Added graceful compatibility fallbacks for older scanners rather than allowing a module-import crash.
 
 ## V13.0 — Asset Intelligence Core
 
