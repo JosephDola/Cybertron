@@ -1,65 +1,42 @@
-# C.Y.B.E.R. V13.0.2
+# C.Y.B.E.R. V13.0.2 — Startup & Runtime Repair
 
-**Runtime Integrity Repair**
+This update fixes the V13 startup problems caused by missing or mismatched runtime files.
 
-This update fixes the startup problems some V13 installs had.
+## What changed
 
-## What was wrong?
+Earlier V13 updates could install only part of the new system. For example, C.Y.B.E.R. could receive the new UI while the telemetry package was still missing, or receive a new hardware monitor while an older scanner was still installed.
 
-Some V13 updates installed only part of the new code. That meant C.Y.B.E.R. could start with a new UI or hardware monitor but still have older or missing files underneath it.
-
-That caused errors such as:
+That caused startup errors such as:
 
 ```text
 ModuleNotFoundError: No module named 'telemetry'
 ```
 
-and scanner/monitor version mismatch crashes.
+V13.0.2 changes the update strategy: the matching runtime is treated as one unit and checked before C.Y.B.E.R. launches.
 
-## What does V13.0.2 fix?
+## What this fixes
 
-V13.0.2 installs the **complete matching runtime** together instead of patching only one or two files.
+- missing internal packages,
+- scanner/monitor version mismatches,
+- partial V13 upgrades,
+- startup import failures,
+- one-fix-at-a-time dependency problems.
 
-It includes the matching:
+## Who should use it
 
-- core systems
-- hardware scanner and monitor
-- asset intelligence
-- system telemetry
-- screen tools
-- voice system
-- UI
-- vision modules
-- AI provider layer
+If you are testing V13 or V13.0.1, move to **V13.0.2**.
 
-Before C.Y.B.E.R. launches, the installer now checks that the important files exist, compile correctly, and can import each other.
+## GitHub downloads
 
-## Why this matters
+This GitHub Release automatically includes:
 
-The goal is to stop this cycle:
+- `Cybertron-13.0.2-source.zip` — the repository source at the exact release commit,
+- `SHA256SUMS.txt` — checksum for the uploaded release files.
 
-```text
-fix one missing file
-↓
-launch again
-↓
-find another missing file
-```
+The separate Mac repair installer package was produced during development, but it is not yet built by the GitHub Actions release runner. The release workflow is now in place so future versions can automatically attach built Mac and Windows packages once those build jobs are connected.
 
-The installer should catch those problems **before** C.Y.B.E.R. starts.
+## What is next
 
-## If you are on V13 or V13.0.1
-
-Use **V13.0.2**. It is the current repair build for the V13 Asset Intelligence release.
-
-## Release files
-
-- `cybertron_v13_0_2_runtime_integrity_repair.zip` — installer/update package
-- `Cybertron-v13.0.2-source-snapshot.zip` — full source snapshot
-
-### SHA-256
-
-- `cybertron_v13_0_2_runtime_integrity_repair.zip`: `c41b35bee53b622ff2a642ebae9587e2955496b67fbb5dff8200ac7ae1457e98`
-- `Cybertron-v13.0.2-source-snapshot.zip`: `b5fe87ee12d2a0fd0f6b117155475b24c79f9645fe877b475f39d4ac475490e9`
+Now that releases are automated, the main focus returns to making hardware detection, live system awareness, and Asset Intelligence reliable before adding more major features.
 
 More technical details are in [`../../docs/updates/cybertron_v13_0_2_runtime_integrity_repair/README.md`](../../docs/updates/cybertron_v13_0_2_runtime_integrity_repair/README.md).
