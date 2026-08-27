@@ -1,0 +1,148 @@
+name: Publish C.Y.B.E.R. Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "release-trigger/current.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cybertron-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read release request
+        id: meta
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          trigger = Path("release-trigger/current.json")
+          data = json.loads(trigger.read_text(encoding="utf-8"))
+
+          version = str(data.get("version", "")).strip()
+          title = str(data.get("title", "")).strip()
+          notes_file = str(data.get("notes_file", "")).strip()
+          prerelease = bool(data.get("prerelease", True))
+
+          if not re.fullmatch(r"v\d+\.\d+\.\d+(?:[-.][0-9A-Za-z.-]+)?", version):
+              raise SystemExit(f"Invalid release version: {version!r}")
+          if not title:
+              raise SystemExit("Release title is required")
+          if not notes_file or not Path(notes_file).is_file():
+              raise SystemExit(f"Release notes file does not exist: {notes_file!r}")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
+              print(f"version={version}", file=out)
+              print(f"title={title}", file=out)
+              print(f"notes_file={notes_file}", file=out)
+              print(f"prerelease={'true' if prerelease else 'false'}", file=out)
+          PY
+
+      - name: Build release files
+        id: package
+        shell: bash
+        env:
+          VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          set -euo pipefail
+          VERSION_NUMBER="${VERSION#v}"
+          SOURCE_ZIP="Cybertron-${VERSION_NUMBER}-source.zip"
+
+          # Build the source ZIP from the exact commit being released.
+          git archive --format=zip --output "$SOURCE_ZIP" HEAD
+
+          FILES=("$SOURCE_ZIP")
+          OPTIONAL_DIR="release-assets/$VERSION"
+          if [[ -d "$OPTIONAL_DIR" ]]; then
+            while IFS= read -r -d '' file; do
+              FILES+=("$file")
+            done < <(find "$OPTIONAL_DIR" -maxdepth 1 -type f -print0 | sort -z)
+          fi
+
+          sha256sum "${FILES[@]}" > SHA256SUMS.txt
+          echo "source_zip=$SOURCE_ZIP" >> "$GITHUB_OUTPUT"
+
+      - name: Create or update Git tag
+        shell: bash
+        env:
+          VERSION: ${{ steps.meta.outputs.version }}
+          TITLE: ${{ steps.meta.outputs.title }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+            echo "Tag $VERSION already exists."
+          else
+            git tag -a "$VERSION" -m "$TITLE" "$GITHUB_SHA"
+            git push origin "$VERSION"
+          fi
+
+      - name: Publish GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.meta.outputs.version }}
+          TITLE: ${{ steps.meta.outputs.title }}
+          NOTES_FILE: ${{ steps.meta.outputs.notes_file }}
+          PRERELEASE: ${{ steps.meta.outputs.prerelease }}
+          SOURCE_ZIP: ${{ steps.package.outputs.source_zip }}
+        run: |
+          set -euo pipefail
+
+          ASSETS=("$SOURCE_ZIP" "SHA256SUMS.txt")
+          OPTIONAL_DIR="release-assets/$VERSION"
+          if [[ -d "$OPTIONAL_DIR" ]]; then
+            while IFS= read -r -d '' file; do
+              ASSETS+=("$file")
+            done < <(find "$OPTIONAL_DIR" -maxdepth 1 -type f -print0 | sort -z)
+          fi
+
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "Release $VERSION already exists; refreshing notes and assets."
+            gh release edit "$VERSION" --title "$TITLE" --notes-file "$NOTES_FILE"
+            gh release upload "$VERSION" "${ASSETS[@]}" --clobber
+          else
+            EXTRA_ARGS=()
+            if [[ "$PRERELEASE" == "true" ]]; then
+              EXTRA_ARGS+=(--prerelease)
+            fi
+            gh release create "$VERSION" \
+              --title "$TITLE" \
+              --notes-file "$NOTES_FILE" \
+              "${EXTRA_ARGS[@]}" \
+              "${ASSETS[@]}"
+          fi
+
+      - name: Summary
+        shell: bash
+        env:
+          VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          {
+            echo "## C.Y.B.E.R. release published"
+            echo
+            echo "Release: **$VERSION**"
+            echo
+            echo "The release includes a source ZIP, SHA-256 checksums, and any files placed in \`release-assets/$VERSION/\`."
+          } >> "$GITHUB_STEP_SUMMARY"
